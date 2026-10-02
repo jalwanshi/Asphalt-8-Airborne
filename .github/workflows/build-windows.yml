@@ -38,8 +38,16 @@ jobs:
       run: |
         python -c "import cv2, mediapipe, pyautogui, numpy, PIL; print('All heavy dependencies imported successfully.')"
 
+    - name: Validate Spec File Exists
+      run: |
+        if (!(Test-Path "./AI-Gesture-Controller.spec")) {
+            Write-Error "PyInstaller spec file is missing"
+            Get-ChildItem -Recurse -File | Select-Object FullName
+            exit 1
+        }
+
     - name: Build Windows Executable
-      run: pyinstaller AI-Gesture-Controller.spec --clean
+      run: python -m PyInstaller ./AI-Gesture-Controller.spec --clean
 
     - name: Verify Output Exists
       run: |
